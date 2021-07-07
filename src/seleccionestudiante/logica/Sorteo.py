@@ -1,4 +1,5 @@
 from src.seleccionestudiante.modelo.Asignatura import Asignatura
+from src.seleccionestudiante.modelo.Estudiante import Estudiante
 from src.seleccionestudiante.modelo.declarative_base import engine, Base, session
 
 class Sorteo():
@@ -52,3 +53,20 @@ class Sorteo():
                         session.query ( Asignatura ).filter (
                             Asignatura.nombreAsignatura.ilike ( '%{0}%'.format ( nombreAsignatura ) ) ).all ( ) ]
         return asignaturas
+
+    def agregar_estudiantef(self, apellidoPaterno , apellidoMaterno , nombres):
+        if(apellidoPaterno=="" and nombres==""):
+            return False
+
+        busqueda = session.query(Estudiante).filter(Estudiante.apellidoPaterno == apellidoPaterno,
+                                                    Estudiante.apellidoMaterno == apellidoMaterno,
+                                                    Estudiante.nombres==nombres).all()
+        if len(busqueda) == 0:
+            estudiante = Estudiante(apellidoPaterno=apellidoPaterno)
+            session.add(estudiante)
+            session.commit()
+            return True
+        else:
+            return False
+
+
